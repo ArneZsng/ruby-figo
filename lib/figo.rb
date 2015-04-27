@@ -324,10 +324,16 @@ module Figo
     # @param params [Hash]
     # @return [String] the URL to be opened by the user for monitoring the process
     def add_account(request_params)
-      p 'test'
-      p request_params
       response = query_api "/rest/accounts", request_params, "POST"
-      p response
+      return response
+    end
+
+    # Poll task state
+    #
+    # @param params [Hash]
+    # @return [String] the URL to be opened by the user for monitoring the process
+    def poll_task_state(request_params)
+      response = query_api "/task/progress?id=#{request_params["id"]}", request_params, "POST"
       return response
     end
 

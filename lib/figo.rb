@@ -162,6 +162,19 @@ module Figo
       return "https://#{$api_endpoint}/auth/code?" + URI.encode_www_form(data)
     end
 
+    # Login user through API
+    #
+    # grant_type=password&username=demo@figo.me&password=demo1234&device_name=My+Phone&device_type=iPhone&device_udid=b4ec8a40e122b6b249056a9424e169e5
+    def credential_login(username = 'demo@figo.me', password = 'demo1234', device_name = nil, device_type = nil, device_udid = nil)
+      data = { "grant_type" => "password",
+        "username" => username,
+        "password" => password,
+        "device_name" => device_name,
+        "device_type" => device_type,
+        "device_udid" => device_udid }
+      return query_api("/auth/token", data)
+    end
+
 
     # Exchange authorization code or refresh token for access token.
     #
@@ -205,7 +218,7 @@ module Figo
     # @param send_newsletter [Boolean] This flag indicates whether the user has agreed to be contacted by email -- Not accepted by backend at the moment
     # @return [Hash] object with the key `recovery_password` as documented in the figo Connect API specification
     def create_user(name, email, password, language='de', send_newsletter=true)
-        data = { 'name' => name, 'email' => email, 'password' => password, 'language' => language, 'affiliate_client_id' => @client_id} #'send_newsletter' => send_newsletter, 
+        data = { 'name' => name, 'email' => email, 'password' => password, 'language' => language, 'affiliate_client_id' => @client_id} #'send_newsletter' => send_newsletter,
         return query_api("/auth/user", data)
     end
   end
@@ -297,6 +310,14 @@ module Figo
     # @param account_id [String] ID of the account to be retrieved.
     # @return [Account] account object
     def get_account(account_id)
+      query_api_object Account, "/rest/accounts/#{account_id}"
+    end
+
+    # Add specific account.
+    #
+    # @param account_id [String] ID of the account to be retrieved.
+    # @return [Account] account object
+    def add_account(account_id)
       query_api_object Account, "/rest/accounts/#{account_id}"
     end
 

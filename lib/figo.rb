@@ -261,8 +261,14 @@ module Figo
       request["User-Agent"] =  "ruby-figo"
       request.body = JSON.generate(data) unless data.nil?
 
+      p uri
+      p request
+      p request.body
+
       # Send HTTP request.
       response = @https.request(uri, request)
+
+      p response
 
       # Evaluate HTTP response.
       return nil if response.nil?
@@ -315,10 +321,14 @@ module Figo
 
     # Add specific account.
     #
-    # @param account_id [String] ID of the account to be retrieved.
-    # @return [Account] account object
-    def add_account(account_id)
-      query_api_object Account, "/rest/accounts/#{account_id}"
+    # @param params [Hash]
+    # @return [String] the URL to be opened by the user for monitoring the process
+    def add_account(request_params)
+      p 'test'
+      p request_params
+      response = query_api "/rest/accounts", request_params, "POST"
+      p response
+      return response
     end
 
     # Modify specific account

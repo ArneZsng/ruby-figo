@@ -261,14 +261,8 @@ module Figo
       request["User-Agent"] =  "ruby-figo"
       request.body = JSON.generate(data) unless data.nil?
 
-      p uri
-      p request
-      p request.body
-
       # Send HTTP request.
       response = @https.request(uri, request)
-
-      p response
 
       # Evaluate HTTP response.
       return nil if response.nil?
@@ -317,6 +311,10 @@ module Figo
     # @return [Account] account object
     def get_account(account_id)
       query_api_object Account, "/rest/accounts/#{account_id}"
+    end
+
+    def get_own_account(account_id)
+      query_api "/rest/accounts/#{account_id}"
     end
 
     # Add specific account.
@@ -522,7 +520,7 @@ module Figo
       params['redirect_uri'] = redirect_uri unless redirect_uri.nil?
 
       response = query_api "/rest/accounts/#{payment.account_id}/payments/#{payment.payment_id}/submit", params, "POST"
-      return "https://#{$api_endpoint}/task/start?id=#{response["task_token"]}"
+      return response
     end
 
     # Remove payment
